@@ -1,9 +1,9 @@
-import {
-  REQUEST_INDICATORS,
-  EXCHANGES_ENUM,
-  SCREENERS_ENUM,
-  INTERVALS_ENUM,
-  INTERVALS_SCHEMA,
+import { 
+  REQUEST_INDICATORS, 
+  EXCHANGES_ENUM, 
+  SCREENERS_ENUM, 
+  INTERVALS_ENUM, 
+  INTERVALS_SCHEMA 
 } from './contracts';
 import { ParseTAResponse } from './reponseParser';
 const SCAN_URL = 'https://scanner.tradingview.com/';
@@ -23,8 +23,9 @@ export class TradingViewScan {
     public exchange: EXCHANGES_ENUM,
     public symbol: string,
     public interval: INTERVALS_ENUM,
-    private axiosInstance: typeof Axios = Axios,
+    private axiosInstance: typeof Axios = Axios
   ) {}
+
   public async analyze() {
     this.validateExchange();
     this.validateScreener();
@@ -36,37 +37,33 @@ export class TradingViewScan {
   public async _makeRequest() {
     const exch_smbl = `${this.exchange.toUpperCase()}:${this.symbol.toUpperCase()}`;
     const reqData = getData(exch_smbl, this.interval);
+
     try {
       const { data } = await this.axiosInstance.post(
         `${SCAN_URL}${this.screener.toLowerCase()}/scan`,
-        reqData,
+        reqData
       );
-      const result = new ParseTAResponse(data).parse();
-
-      return {
-        screener: this.screener,
-        exchange: this.exchange,
-        symbol: this.symbol,
-        interval: this.interval,
-        time: new Date().toDateString(),
-        ...result,
-      };
-      return result;
+      // Utiliser le ParseTAResponse mis à jour
+      return new ParseTAResponse(data).parse();
     } catch (error) {
+      console.error('Error in fetching or processing data:', error);
       throw error;
     }
   }
-  public async validateExchange() {
+
+  public validateExchange() {
     if (Object.values(EXCHANGES_ENUM).indexOf(this.exchange) === -1) {
       throw new Error(`Exchange "${this.exchange}" is not valid`);
     }
   }
-  public async validateScreener() {
+
+  public validateScreener() {
     if (Object.values(SCREENERS_ENUM).indexOf(this.screener) === -1) {
       throw new Error(`Screener "${this.screener}" is not valid`);
     }
   }
-  public async validateSymbol() {
+
+  public validateSymbol() {
     if (typeof this.symbol !== 'string') {
       throw new Error(`Symbol "${this.symbol}" is not valid`);
     }
