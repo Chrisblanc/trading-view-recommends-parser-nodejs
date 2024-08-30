@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "Trading view trading recommends parse - NodeJS",
   "engines": {
-    "node": ">= 14.16 <15"
+    "node": ">= 16.0.0"
   },
   "main": "build/src/index.js",
   "devDependencies": {
@@ -40,6 +40,6 @@
     "axios": "^1.7.5"
   },
   "volta": {
-    "node": "14.16.0"
+    "node": "16.0.0"
   }
 }
